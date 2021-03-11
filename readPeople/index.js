@@ -8,11 +8,11 @@ exports.handler = async (event) => {
 
   try {
 
-    data = await peopleModel.query('id').eq(id).exec();
-    const { name, phone } = JSON.parse(event.body);
-
-    let record = new peopleModel({ id, name, phone });
-    data = await record.save();
+    if (id) {
+      data = await peopleModel.query('id').eq(id).exec();
+    } else {
+      data = await peopleModel.scan().exec();
+    }
 
   } catch (e) {
     return {
