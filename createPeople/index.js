@@ -1,15 +1,15 @@
+const { v4: uuid } = require('uuid');
 const dynamoose = require('dynamoose');
 const peopleModel = require('./people.schema.js');
 
 exports.handler = async (event) => {
 
   let data;
-  let id = event.pathParameters && event.pathParameters.id;
 
   try {
 
-    data = await peopleModel.query('id').eq(id).exec();
     const { name, phone } = JSON.parse(event.body);
+    let id = uuid();
 
     let record = new peopleModel({ id, name, phone });
     data = await record.save();
@@ -17,7 +17,7 @@ exports.handler = async (event) => {
   } catch (e) {
     return {
       statusCode: 500,
-      body: e.message,
+      body: e.message
     }
   }
 
